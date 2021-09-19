@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Lógica de programação - ATM Machine - Javascript</title>
+</head>
+
+<body>
+	<script>
+		var saldo = 100.5; //Float 1.36
+
+		// Ao acessar o sistema, pergunte o nome do usuário e diga "Olá {Nome} é um prazer ter você por aqui!".
+		var nome = prompt("Qual é o seu nome?");
+		alert("Olá " + nome + ", é um prazer ter você por aqui!");
+
+		function inicio() {
+
+			// A ordem das opções deve ser: Saldo, Extrato, Saque, Depósito, Transferência e Sair. 
+			var escolha = parseInt(prompt(
+				'Selecione uma opção\n 1.) Saldo\n 2.) Extrato\n 3.) Saque\n 4.) Depósito\n 5.) Transferência\n 6.) Sair'
+			));
+
+			switch (escolha) {
+				case 1:
+					ver_saldo();
+					break;
+				case 2:
+					ver_extrato();
+					break;
+				case 3:
+					fazer_saque();
+					break;
+				case 4:
+					fazer_deposito();
+					break;
+				case 5:
+					fazer_transferencia();
+					break;
+				case 6:
+					sair();
+					break;
+				default:
+					erro();
+			}
+		}
+
+		function validarSenha() {
+			var senha = Number(prompt('Informe sua senha: '));
+			if (senha !== 3589) {
+				alert("Senha inválida. Digite novamente.");
+				validarSenha();
+			}
+		}
+
+		function ver_saldo() {
+			// Sempre que o usuário for acessar o saldo é necessário que ele informe uma senha. Essa senha deve validada com uma condicional. A senha é 3589. 
+			validarSenha();
+			alert('Seu saldo atual é: ' + saldo);
+			inicio();
+		}
+
+		function ver_extrato() {
+			// Sempre que o usuário for retirar o extrato é necessário que ele informe uma senha. Essa senha deve validada com uma condicional. A senha é 3589. 
+			validarSenha();
+
+			// Adicionar a opção para ver o extrato (Coloque algumas compras ou depósitos fictícios). 
+			alert(
+				"EXTRATO \n\n Compra Cartão Débito \n Supermercado Carrefour \n 05/09 \n R$180,00 \n\n Cartão Débito \n Uber \n 05/09 \n R$20,00 \n\n Débito Automático \n Anuidade \n 10/09 \n R$10,00 \n\n Cartão Débito \n Ifood \n 12/09 \n R$30,00"
+				);
+			inicio();
+		}
+
+		function fazer_saque() {
+			// Sempre que o usuário for sacar, é necessário que ele informe uma senha. Essa senha deve validada com uma condicional. A senha é 3589. 
+			// Sempre que o usuário for sacar dinheiro, o valor restante não pode ser negativo, ou seja, caso o usuário tente sacar mais do que tem em saldo, a ação não deve ocorrer. Exiba uma mensagem de "Operação não autorizada". 
+			// Sempre que o usuário for sacar dinheiro, o valor a ser sacado não pode ser igual ou menor a zero. Exiba uma mensagem de "Operação não autorizada". 
+
+			var saque = parseFloat(prompt('Qual o valor para saque?'));
+			if (isNaN(saque) || saque === '') {
+				alert('Por favor, informe um número:');
+				fazer_saque();
+			} else if (saque > saldo || saque <= 0) {
+				alert('Operação não autorizada.');
+				fazer_saque();
+			} else {
+				validarSenha();
+				saldo -= saque;
+				alert('Operação Realizada.');
+				alert('Seu saldo atual é R$' + saldo);
+				inicio();
+			}
+		}
+
+		function fazer_deposito() {
+			// Caso o usuário informe um valor para depósito igual ou menor que zero, não deixe a operação ocorrer. Exiba uma mensagem de "Operação não autorizada". 
+			var deposito = parseFloat(prompt('Qual o valor para depósito?'));
+			// Not a Number
+			if (isNaN(deposito) || deposito === '') {
+				alert('Por favor, informe um número:');
+				fazer_deposito();
+			} else if (deposito <= 0) {
+				alert('Operação não autorizada.');
+				fazer_deposito();
+			} else {
+				saldo += deposito;
+				alert('Operação Realizada.');
+				alert('Seu saldo atual é R$' + saldo);
+				inicio();
+			}
+		}
+
+		function fazer_transferencia() {
+			// Sempre que o usuário for acessar transferir dinheiro é necessário que ele informe uma senha. Essa senha deve validada com uma condicional. A senha é 3589. 
+			// Adicionar a opção para fazer uma transferência. A transferência consiste em você informar o número de uma conta (pode ser qualquer número, mas obrigatoriamente um número, ou seja, nenhum outro caractere deve ser aceito), perguntar o valor da transferência e remover o valor da conta da mesma forma como na ação do saldo. Caso o usuário tente transferir mais do que tem em saldo, a ação não deve ocorrer. Exiba uma mensagem de "Operação não autorizada". 
+			// Sempre que o usuário for transferir dinheiro,  o valor a ser transferido não pode ser igual ou menor a zero., ou seja, caso o usuário tente transferir mais do que tem em saldo, a ação não deve ocorrer. Exiba uma mensagem de "Operação não autorizada". 
+
+			var valorConta = parseFloat(prompt("Digite o número da conta que deseja realizar a transferência: "));
+			if (isNaN(valorConta) || valorConta === '') {
+				alert('Por favor, informe um número: ');
+				fazer_transferencia();
+			}
+			var valorTranferencia = parseFloat(prompt("Digite o valor que deseja transferir: "));
+			if (isNaN(valorTranferencia) || valorTranferencia === '') {
+				alert('Por favor, informe um número:');
+				fazer_transferencia();
+
+			} else if (valorTranferencia > saldo || valorTranferencia <= 0) {
+				alert('Operação não autorizada.');
+				fazer_transferencia();
+
+			} else {
+				alert("TRANSFERÊNCIA BANCÁRIA \n Conta: " + valorConta + "\n Valor a Transferir R$: " + valorTranferencia);
+				validarSenha();
+				saldo -= valorTranferencia;
+				alert('Operação Realizada.');
+				alert('Seu saldo atual é R$' + saldo);
+				inicio();
+			}
+		}
+
+		function sair() {
+			// Quando o usuário escolher sair do sistema, exiba uma mensagem agradecendo por utilizar os serviços do banco: "{Nome}, foi um prazer ter você por aqui!"
+			var confirma = confirm('Você deseja sair?');
+			if (confirma) {
+				alert(nome + ', foi um prazer ter você por aqui!');
+				window.close();
+			} else {
+				inicio();
+			}
+		}
+
+		function erro() {
+			// Atualize a função "erro" com as novas opções do menu.
+			alert('Por favor, informe um número entre 1 e 6');
+			inicio();
+		}
+		inicio();
+	</script>
+
+</body>
+
+</html>
